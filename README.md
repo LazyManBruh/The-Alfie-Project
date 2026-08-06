@@ -24,7 +24,7 @@ speech-to-text (Vosk), a local LLM via Ollama, and text-to-speech (Piper).
 
 1. Activate the existing virtualenv and install dependencies:
    ```bash
-   source /home/lazyman/alfie-env/bin/activate
+   source /home/user/alfie-env/bin/activate
    pip install -r requirements.txt
    ```
 2. Make sure Ollama is running with a pulled model (`ollama pull qwen2.5:3b-instruct`).
@@ -52,7 +52,7 @@ and enabled to start automatically whenever you log in, and set to auto-restart
 actually killing the process and watching it come back.
 
 `systemd/alfie.service` has this exact machine's absolute paths baked in
-(`/home/lazyman/...`) - on another machine, copy it to
+(`/home/user/...`) - on another machine, copy it to
 `~/.config/systemd/user/`, fix the paths, then `systemctl --user daemon-reload`.
 
 ```bash
@@ -64,8 +64,8 @@ systemctl --user disable --now alfie   # turn the auto-start off entirely
 ```
 
 Note: it currently starts on login, not before login (`loginctl show-user
-lazyman` shows `Linger=no`). It could be made to survive a full logout too
-via `loginctl enable-linger lazyman`, but that wasn't turned on here since
+user` shows `Linger=no`). It could be made to survive a full logout too
+via `loginctl enable-linger user`, but that wasn't turned on here since
 it's untested whether the audio session would actually still be reachable
 without an active login on this setup.
 
