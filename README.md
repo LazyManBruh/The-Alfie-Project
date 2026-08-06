@@ -1,5 +1,12 @@
 # Alfie Assistant
 
+**When life gives you lemons, make AI.**
+
+This project is simple to understand: we're trying to make a JARVIS AI type
+of assistant. That's all there is to it. For now, the AI part is in the
+making, but hopefully in the future we'll try to give Alfie a body to live
+in (if he tries to kill us, we are doomed).
+
 A personal voice assistant inspired by JARVIS. Fully local: wake word (openWakeWord),
 speech-to-text (Vosk), a local LLM via Ollama, and text-to-speech (Piper).
 
