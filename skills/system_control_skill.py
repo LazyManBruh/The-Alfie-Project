@@ -17,14 +17,18 @@ CONFIRMATION_TIMEOUT so a stale "shutdown?" from one exchange can't get
 accidentally confirmed by an unrelated later command.
 """
 
+import os
 import re
 import shutil
 import subprocess
+import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
 from .base import Skill
 from loguru import logger
+
+APP_STARTUP_CHECK_DELAY = 0.5
 
 try:
     import psutil
@@ -268,9 +272,42 @@ class SystemControlSkill(Skill):
         binary = self._resolve_app(t)
         if not binary:
             return "I don't know how to open that, sir."
+
+        # stderr used to go to DEVNULL, so a launch that failed silently (bad
+        # display, crashed on startup, whatever) left zero trace in the logs
+        # - discovered this the hard way when "open firefox" once did nothing
+        # and there was nothing to look at afterward. A temp file (not a pipe)
+        # is important here: the app may run for hours, and an unconsumed pipe
+        # has a small kernel buffer that would eventually fill and block the
+        # app's own writes, whereas a file just keeps growing harmlessly.
+        stderr_path = tempfile.mktemp(suffix=f"-{binary}-stderr.log")
         try:
-            subprocess.Popen([binary], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            return f"Opening {binary}, sir."
+            with open(stderr_path, "w") as stderr_file:
+                process = subprocess.Popen([binary], stdout=subprocess.DEVNULL, stderr=stderr_file)
         except Exception as e:
             logger.error(f"failed to launch {binary}: {e}")
             return f"I couldn't open {binary}, sir."
+
+        # Give it a moment to fail fast rather than claiming success
+        # unconditionally right after Popen() returns.
+        time.sleep(APP_STARTUP_CHECK_DELAY)
+        exit_code = process.poll()
+
+        if exit_code is not None and exit_code != 0:
+            error_output = ""
+            try:
+                with open(stderr_path) as f:
+                    error_output = f.read().strip()
+            except OSError:
+                pass
+            finally:
+                os.unlink(stderr_path)
+            logger.error(f"{binary} exited immediately (code {exit_code}): {error_output[-500:]}")
+            return f"I couldn't open {binary}, sir - it closed immediately."
+
+        # Still running (the expected case) - unlinking now is safe even
+        # though the process holds the fd open; the file stays valid for it
+        # until it exits, and disk space is reclaimed then.
+        if os.path.exists(stderr_path):
+            os.unlink(stderr_path)
+        return f"Opening {binary}, sir."
