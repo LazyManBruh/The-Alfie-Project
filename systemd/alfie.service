@@ -1,0 +1,17 @@
+[Unit]
+Description=Alfie voice assistant
+After=pipewire.service wireplumber.service ollama.service
+Wants=pipewire.service wireplumber.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=/home/lazyman
+Environment=PATH=/home/lazyman/alfie-env/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin
+ExecStart=/home/lazyman/alfie-env/bin/python3 -m alfie_assistant
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

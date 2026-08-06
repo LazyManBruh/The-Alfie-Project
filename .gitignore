@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Generated on first run with sane defaults (config.py); this file ends up
+# with machine-specific absolute paths (models, the trained wake word, etc.)
+# that won't exist on a fresh clone.
+config.yaml

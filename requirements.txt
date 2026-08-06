@@ -1,0 +1,23 @@
+# Core dependencies
+sounddevice
+numpy
+pyyaml
+loguru
+vosk
+httpx
+openwakeword
+piper-tts
+yt-dlp
+pint
+psutil
+
+# System dependencies (not pip-installable):
+# - piper binary (installed via pip install piper-tts, provides the `piper` CLI)
+# - mpv (for the media_control skill's "play <song/artist/genre>"): pacman -S mpv / apt install mpv
+# - playerctl (media_control skill fallback, for controlling other MPRIS players
+#   like a browser tab, when we didn't start the current playback ourselves):
+#   pacman -S playerctl / apt install playerctl
+# - node (for yt-dlp's YouTube JS challenge solving) - see ~/.config/yt-dlp/config,
+#   which sets --js-runtimes node so this applies automatically to every yt-dlp call
+# - wpctl (system_control skill's volume control, part of the wireplumber package)
+# - Ollama running locally with a pulled model: https://ollama.com
