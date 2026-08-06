@@ -68,6 +68,9 @@ CASES = [
     ("what is in the news", "news"),
     ("give me the news", "news"),
     ("top headlines", "news"),
+    ("ping google.com", "network_check"),
+    ("is port 443 open on google.com", "network_check"),
+    ("google.com port 443", "network_check"),
     # These should fall through to the LLM - no skill should claim them.
     ("tell me a joke", None),
     ("good morning", None),

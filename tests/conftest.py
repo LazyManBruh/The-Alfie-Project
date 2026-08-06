@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 ENABLED_SKILLS = [
     "time", "date", "weather", "web_search", "timer", "media_control",
     "calculator", "unit_conversion", "reminder", "system_control", "wikipedia",
-    "briefing", "currency_conversion", "news",
+    "briefing", "currency_conversion", "news", "network_check",
 ]
 
 

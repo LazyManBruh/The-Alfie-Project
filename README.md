@@ -162,6 +162,15 @@ Built-in skills (in `skills/`), matched by keyword before falling back to the LL
   brightness, screenshots, network status/IP, locking/suspending, opening a
   few installed apps, and shutting down/restarting (the last two require a
   spoken "yes" confirmation first - see `tests/test_system_control.py`)
+- `briefing`: "brief me" / "sitrep" - one summary combining time/date,
+  weather, pending reminders, and battery, rather than round-tripping through
+  each of those skills' own (differently-phrased) responses
+- `currency_conversion`: "convert 50 dollars to euros", via frankfurter.dev
+  (disambiguates "pounds" as currency vs. weight from `unit_conversion`
+  depending on what's on the other side of the conversion)
+- `news`: "give me the news" - top 3 headlines via BBC's public RSS feed
+- `network_check`: "ping google.com", "is port 443 open on example.com" -
+  deliberately scoped to one host/port at a time, not a port scanner
 
 Add a new skill by creating `skills/<name>_skill.py` with a `<Name>Skill`
 class inheriting from `skills.base.Skill`, implementing `matches(text)` and
@@ -173,7 +182,7 @@ one collided with an existing one.
 
 ```bash
 pip install -r requirements-dev.txt
-pytest              # fast suite: ~95 tests, no network/system side effects, ~6s
+pytest              # fast suite: ~125 tests, no network/system side effects, ~6s
 pytest -m integration   # + real Wikipedia and Ollama calls (needs both reachable)
 ```
 
